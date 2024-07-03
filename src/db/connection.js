@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-mongoose.connect('mongodb://127.0.0.1:27017/machinetest',)
+mongoose.connect('mongodb://127.0.0.1:27017/latitite',)
   .then(() => {
     console.log('DB connected successfully');
   })
