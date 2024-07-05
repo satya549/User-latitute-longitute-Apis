@@ -1,4 +1,8 @@
+import bcript from "bcryptjs";
+import jwt from "jsonwebtoken";
 import UserModel from "../model/User.js";
+const secretKey = "secretkey";
+
 
 export async function CreateUser(req, res) {
   try {
@@ -11,14 +15,21 @@ export async function CreateUser(req, res) {
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) throw new Error("Email address already exist");
 
+    const hashedPassword = bcrypt.hashSync(password);
+
+
     const newUser = await UserModel.create({
       name,
       email,
-      password,
+      password : hashedPassword,
       address,
       latitude,
       longitude,
       status: "active",
+    });
+
+    const token = jwt.sign({ email: newUser.email }, "secretkey", {
+      expiresIn: "1h",
     });
 
     res.status(200).json({
@@ -32,6 +43,7 @@ export async function CreateUser(req, res) {
         longitude: newUser.longitude,
         status: newUser.status,
         register_at: newUser.createdAt,
+        token
       },
     });
   } catch (error) {
