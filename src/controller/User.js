@@ -1,8 +1,7 @@
-import bcript from "bcryptjs";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import UserModel from "../model/User.js";
 const secretKey = "secretkey";
-
 
 export async function CreateUser(req, res) {
   try {
@@ -17,11 +16,10 @@ export async function CreateUser(req, res) {
 
     const hashedPassword = bcrypt.hashSync(password);
 
-
     const newUser = await UserModel.create({
       name,
       email,
-      password : hashedPassword,
+      password: hashedPassword,
       address,
       latitude,
       longitude,
@@ -43,11 +41,29 @@ export async function CreateUser(req, res) {
         longitude: newUser.longitude,
         status: newUser.status,
         register_at: newUser.createdAt,
-        token
+        token,
       },
     });
   } catch (error) {
     res.json({
+      status_code: 400,
+      message: error.message,
+    });
+  }
+}
+
+export async function changeUserStatus(req, res) {
+  try {
+    await UserModel.updateMany({}, [
+      {
+        $set: {
+          status: {},
+        },
+      },
+    ]);
+  } catch (error) {
+    console.log(error);
+    return res.json({
       status_code: 400,
       message: error.message,
     });
