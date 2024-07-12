@@ -57,7 +57,13 @@ export async function changeUserStatus(req, res) {
     await UserModel.updateMany({}, [
       {
         $set: {
-          status: {},
+          status: {
+            $cond: {
+              if: { $eq: ["$status", "active"] },
+              then: "inactive",
+              else: "active",
+            },
+          },
         },
       },
     ]);
