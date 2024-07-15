@@ -75,3 +75,14 @@ export async function changeUserStatus(req, res) {
     });
   }
 }
+
+export async function listUser(req, res) {
+  try {
+    
+  } catch (error) {
+    return res.json({
+      status_code: 400,
+      message: error.message,
+    });
+  }
+}
