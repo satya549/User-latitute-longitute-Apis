@@ -77,8 +77,36 @@ export async function changeUserStatus(req, res) {
 }
 
 export async function listUser(req, res) {
+  const weekNumber = req.query.week_number?.split(",") || [];
   try {
-    
+    const [users] = await UserModel.aggregate([
+      {
+        $set: {
+          dayOfWeek: {
+            $mod: [{ $subtract: [{ $dayOfWeek: "$createdAt" }, 1] }, 6],
+          },
+        },
+      },
+      { $match: { dayOfWeek: { $in: weekNumber?.map((num) => Number(num)) } } },
+      {
+        $set: {
+          dayOfWeekName: {
+            $switch: {
+              branches: [
+                { case: { $eq: ["$dayOfWeek", 0] }, then: "Sunday" },
+                { case: { $eq: ["$dayOfWeek", 1] }, then: "Monday" },
+                { case: { $eq: ["$dayOfWeek", 2] }, then: "Tuesday" },
+                { case: { $eq: ["$dayOfWeek", 3] }, then: "Wednesday" },
+                { case: { $eq: ["$dayOfWeek", 4] }, then: "Thursday" },
+                { case: { $eq: ["$dayOfWeek", 5] }, then: "Friday" },
+                { case: { $eq: ["$dayOfWeek", 6] }, then: "Saturday" },
+              ],
+              default: "Unknown",
+            },
+          },
+        },
+      },
+    ]);
   } catch (error) {
     return res.json({
       status_code: 400,
