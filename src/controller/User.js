@@ -106,7 +106,43 @@ export async function listUser(req, res) {
           },
         },
       },
+      { $sort: { createdAt: 1 } },
+      {
+        $group: {
+          _id: "$dayOfWeekName",
+          users: {
+            $push: {
+              name: "$name",
+              email: "$email",
+            },
+          },
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          data: {
+            $push: {
+              k: "$_id",
+              v: "$users",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: false,
+          data: {
+            $arrayToObject: "$data",
+          },
+        },
+      },
     ]);
+    return res.json({
+      status_code: "200",
+      message: "Request successfully.",
+      data: users.data,
+    });
   } catch (error) {
     return res.json({
       status_code: 400,
