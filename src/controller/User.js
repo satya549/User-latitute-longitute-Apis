@@ -76,6 +76,13 @@ export async function changeUserStatus(req, res) {
   }
 }
 
+export async function getDistance (req, res) {
+  const { Destination_Latitude, Destination_Longitude } = req.query;
+  
+  if (!Destination_Latitude || !Destination_Longitude)
+    throw new Error("Plese provide Destination Latitude and destination Longitute")
+}
+
 export async function listUser(req, res) {
   const weekNumber = req.query.week_number?.split(",") || [];
   try {

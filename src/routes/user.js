@@ -1,11 +1,13 @@
 import express from "express";
-import { CreateUser, changeUserStatus, listUser } from "../controller/User.js";
+import { CreateUser, changeUserStatus,getDistance, listUser } from "../controller/User.js";
+import { tokenValidator } from "../middleware/middleware.js";
 
 
 const router = express.Router()
 
 router.post("user", CreateUser)
-router.put("changestatus", changeUserStatus)
-router.put("changestatus",listUser )
+router.put("changestatus",tokenValidator, changeUserStatus)
+router.get("/distance", getDistance)
+router.put("changestatus",tokenValidator, listUser )
 
 export default router;
