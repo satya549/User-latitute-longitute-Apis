@@ -81,6 +81,15 @@ export async function getDistance (req, res) {
   
   if (!Destination_Latitude || !Destination_Longitude)
     throw new Error("Plese provide Destination Latitude and destination Longitute")
+  try {
+    const abs = await UserModel.aggregate([ ])
+
+  } catch (error) {
+    res.json({
+      status_code: 400,
+      message: error.message,
+    });
+  }
 }
 
 export async function listUser(req, res) {
