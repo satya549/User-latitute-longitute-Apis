@@ -76,14 +76,39 @@ export async function changeUserStatus(req, res) {
   }
 }
 
-export async function getDistance (req, res) {
+export async function getDistance(req, res) {
   const { Destination_Latitude, Destination_Longitude } = req.query;
-  
-  if (!Destination_Latitude || !Destination_Longitude)
-    throw new Error("Plese provide Destination Latitude and destination Longitute")
-  try {
-    const abs = await UserModel.aggregate([ ])
 
+  if (!Destination_Latitude || !Destination_Longitude)
+    throw new Error(
+      "Plese provide Destination Latitude and destination Longitute"
+    );
+
+  try {
+    const abs = await UserModel.aggregate([
+      {
+        $geoNear: {
+          near: {
+            type: "Point",
+            coordinates: [
+              parseFloat(Destination_Longitude),
+              parseFloat(Destination_Latitude),
+            ],
+          },
+          distanceField: "distance",
+          maxDistance: 10000,
+          spherical: true,
+        },
+      },
+    ]);
+
+    const distanceInKm = abs.length > 0 ? abs[0].distance / 1000 : 0;
+
+    res.json({
+      status_code: "200",
+      message: "Distance calculated successfully",
+      distance: `${distanceInKm.toFixed(2)} km`,
+    });
   } catch (error) {
     res.json({
       status_code: 400,

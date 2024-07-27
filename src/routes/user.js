@@ -7,7 +7,7 @@ const router = express.Router()
 
 router.post("user", CreateUser)
 router.put("changestatus",tokenValidator, changeUserStatus)
-router.get("/distance", getDistance)
-router.put("changestatus",tokenValidator, listUser )
+router.get("/distance", tokenValidator, getDistance)
+router.put("/",tokenValidator, listUser )
 
 export default router;
