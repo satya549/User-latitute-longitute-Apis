@@ -1,5 +1,7 @@
 import jwt from "jsonwebtoken";
 
+const secretKey = "secretkey";
+
 export const tokenValidator = (req, res, next) => {
   const token = req.headers["authorization"];
   try {
@@ -14,6 +16,6 @@ export const tokenValidator = (req, res, next) => {
         status_code: 401,
         success: false,
         message: error.message,
-      });;
+      });
   }
 };

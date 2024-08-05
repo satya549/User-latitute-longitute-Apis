@@ -67,6 +67,11 @@ export async function changeUserStatus(req, res) {
         },
       },
     ]);
+
+    return res.json({
+      status_code: "200",
+      message: "Users status updated successfully.",
+    });
   } catch (error) {
     console.log(error);
     return res.json({
